@@ -1,9 +1,11 @@
 import "./App.css";
+import Search from "./components/search";
 
 function App() {
 	return (
-		<section className=" bg-red-200">
-			<h1 className="text-red-400">Prueba tencnica</h1>
+		<section className="min-h-screen flex flex-col items-center justify-start">
+			{/* search */}
+			<Search />
 		</section>
 	);
 }
