@@ -1,79 +1,62 @@
+import { useCharacterActions } from "../redux/hook/useCharacterActions";
+import { useAppSelector } from "../redux/hook/useStore";
 import { CreateCharacter } from "../schemas/characters";
+import DialogSearch from "./dialog";
 import Delete from "./svg/delete.svg";
-import Update from "./svg/update.svg";
-
-const mock: CreateCharacter[] = [
-	{
-		id: 1,
-		description: "descripcion personaje",
-		name: "nombre personaje",
-		thumbnail:
-			"https://definicion.de/wp-content/uploads/2012/01/imagen-vectorial.png",
-	},
-	{
-		id: 2,
-		description: "descripcion personaje",
-		name: "nombre personaje",
-		thumbnail:
-			"https://definicion.de/wp-content/uploads/2012/01/imagen-vectorial.png",
-	},
-	{
-		id: 3,
-		description: "descripcion personaje",
-		name: "nombre personaje",
-		thumbnail:
-			"https://definicion.de/wp-content/uploads/2012/01/imagen-vectorial.png",
-	},
-	{
-		id: 1,
-		description: "descripcion personaje",
-		name: "nombre personaje",
-		thumbnail:
-			"https://definicion.de/wp-content/uploads/2012/01/imagen-vectorial.png",
-	},
-	{
-		id: 2,
-		description: "descripcion personaje",
-		name: "nombre personaje",
-		thumbnail:
-			"https://definicion.de/wp-content/uploads/2012/01/imagen-vectorial.png",
-	},
-	{
-		id: 3,
-		description: "descripcion personaje",
-		name: "nombre personaje",
-		thumbnail:
-			"https://definicion.de/wp-content/uploads/2012/01/imagen-vectorial.png",
-	},
-];
 
 export default function List() {
+	const data = useAppSelector((state) => state.characters);
+
 	return (
 		<section id="grilla" className="z-40">
-			{mock.map((item) => {
+			{data.map((item) => {
 				return <Card key={item.id} {...item} />;
 			})}
 		</section>
 	);
 }
-
 function Card(item: CreateCharacter) {
+	const { removeCharacter } = useCharacterActions();
+
 	return (
-		<div className=" flex flex-col  border-1 border-black rounded-2xl overflow-hidden p-2 relative">
-			<h1 className=" absolute top-0 right-0 px-5">{item.id}</h1>
-			<img className="p-10" src={item.thumbnail} alt={item.description} />
+		<div className="group bg-white flex flex-col border-1 border-gray-300 rounded-2xl overflow-hidden relative hover:shadow-lg transition-all duration-300">
+			<h1 className="absolute top-0 right-0 px-5 text-white font-bold z-10">
+				{item.id}
+			</h1>
 
-			<div className=" flex flex-col justify-center items-center relative w-full h-full">
-				<h1 className=" text-xl font-semibold text-black">{item.name}</h1>
+			<div className="relative overflow-hidden">
+				<img
+					className="object-cover aspect-square group-hover:opacity-50 group-hover:scale-105 transition-all duration-300 w-full"
+					src={item.thumbnail}
+					alt={item.description}
+				/>
 
-				<h1 className="text-lg font-extralight text-black">
-					{item.description}
+				<div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
+
+				<div className="absolute inset-0 flex items-center justify-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+					<p className="text-white text-sm md:text-base line-clamp-5 text-center">
+						{item.description}
+					</p>
+				</div>
+			</div>
+
+			<div className="flex flex-col justify-center items-center relative w-full h-full bg-white">
+				<h1 className="text-xl w-full px-2 font-semibold text-black truncate">
+					{item.name}
 				</h1>
 			</div>
 
-			<div className=" w-full flex flex-row justify-center items-center gap-2 mt-4">
-				<Update className=" w-[25px] cursor-pointer" />
-				<Delete className=" w-[25px] cursor-pointer" />
+			{/* Botones */}
+			<div className="w-full flex flex-row justify-center items-center gap-2 my-2 bg-white">
+				<DialogSearch
+					onItemSelected={() => {}}
+					data={item}
+					operation={{ type: "update" }}
+				/>
+
+				<button onClick={() => removeCharacter(item.id)}>
+					<Delete className="w-[25px] cursor-pointer" />
+				</button>
 			</div>
 		</div>
 	);

@@ -1,15 +1,30 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
-import { CharacterSchema, CreateCharacter } from "../schemas/characters";
+import {
+	CharacterSchema,
+	CreateCharacter,
+	Operation,
+} from "../schemas/characters";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
 import Spinner from "./svg/spinner.svg";
 import Add from "./svg/add.svg";
+import { useCharacterActions } from "../redux/hook/useCharacterActions";
+import Update from "./svg/update.svg";
 
-export default function DialogSearch({ data }: { data: CreateCharacter }) {
+export default function DialogSearch({
+	data,
+	operation,
+	onItemSelected,
+}: {
+	data: CreateCharacter;
+	operation: Operation;
+	onItemSelected: () => void;
+}) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
+
+	const { addNewUser, modifyCharacter } = useCharacterActions();
 
 	const {
 		register,
@@ -25,32 +40,41 @@ export default function DialogSearch({ data }: { data: CreateCharacter }) {
 
 	const Submit = async (data: CreateCharacter) => {
 		setLoading(true);
-		setTimeout(() => {
-			toast.success("Guaradar en redux: " + data);
 
-			reset();
-			setLoading(false);
-			setIsOpen(false);
-		}, 2000);
+		if (operation.type === "insert") {
+			addNewUser(data);
+		} else {
+			modifyCharacter(data);
+		}
+		reset();
+		setLoading(false);
+		setIsOpen(false);
+		onItemSelected();
 	};
 
 	return (
 		<Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
 			<Dialog.Trigger asChild>
-				<div className="w-full flex flex-row hover:bg-gray-200 p-1 cursor-pointer justify-center items-center">
-					<h1 className="p-2 font-semibold truncate w-full text-start ">
-						{data.name}
-					</h1>
-					<div className="w-[15px] h-full flex justify-center items-center">
-						<Add className="w-[15px] h-[15px]" />
+				{operation.type === "insert" ? (
+					<div className="w-full flex flex-row hover:bg-gray-200 p-1 cursor-pointer justify-center items-center">
+						<h1 className="p-2 font-semibold truncate w-full text-start ">
+							{data.name}
+						</h1>
+						<div className="w-[15px] h-full flex justify-center items-center">
+							<Add className="w-[15px] h-[15px]" />
+						</div>
 					</div>
-				</div>
+				) : (
+					<Update className="w-[25px] h-[25px] cursor-pointer" />
+				)}
 			</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Overlay className="fixed inset-0 bg-blackA6 data-[state=open]:animate-overlayShow" />
-				<Dialog.Content className="z-[99] bg-white border-2 fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray1 p-[25px] shadow-[var(--shadow-6)] focus:outline-none data-[state=open]:animate-contentShow">
-					<Dialog.Title className="m-0 text-[17px] font-medium text-mauve12">
-						Edit link
+				<Dialog.Content className="z-[99] bg-white border-gray-300 border-2 fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray1 p-[25px] shadow-[var(--shadow-6)] focus:outline-none data-[state=open]:animate-contentShow">
+					<Dialog.Title className="m-0 pb-5 text-[17px] font-medium text-mauve12">
+						{operation.type === "insert"
+							? "Crear un nuevo personaje"
+							: "Actualizar un personaje"}
 					</Dialog.Title>
 
 					<form className="" onSubmit={handleSubmit(Submit)}>
@@ -101,11 +125,11 @@ export default function DialogSearch({ data }: { data: CreateCharacter }) {
 							>
 								descripcion
 							</label>
-							<input
-								type="text"
+							<textarea
 								id="descripcion"
 								className="border-gray-300 border-2 rounded-md p-2 w-full"
 								placeholder="descripcion"
+								rows={5}
 								{...register("description")}
 							/>
 
@@ -141,14 +165,16 @@ export default function DialogSearch({ data }: { data: CreateCharacter }) {
 
 						<div className=" w-full flex flex-row gap-2 items-center justify-end mt-4">
 							<button
-								className=" bg-gray-400 rounded-xl font-semibold px-2 py-1 text-black cursor-pointer"
-								onClick={() => setIsOpen(false)}
+								className=" bg-blue-200 rounded-xl font-semibold px-2 py-1 text-black cursor-pointer"
+								onClick={() => {
+									setIsOpen(false);
+								}}
 							>
 								Cancel
 							</button>
 
-							<button className=" bg-gray-400 rounded-xl font-semibold px-2 py-1 text-black cursor-pointer flex flex-row justify-center  items-center gap-2">
-								Update
+							<button className=" bg-blue-400 rounded-xl font-semibold px-2 py-1 text-black cursor-pointer flex flex-row justify-center  items-center gap-2">
+								{operation.type === "insert" ? "Crear" : "Actualizar"}
 								{loading && <Spinner />}
 							</button>
 						</div>

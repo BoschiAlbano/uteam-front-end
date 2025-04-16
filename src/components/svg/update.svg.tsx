@@ -7,11 +7,12 @@ export default function Update(props: React.SVGProps<SVGSVGElement>) {
 			stroke="currentColor"
 			fill="currentColor"
 			strokeWidth="0"
-			viewBox="0 0 24 24"
+			viewBox="0 0 20 20"
+			aria-hidden="true"
 			xmlns="http://www.w3.org/2000/svg"
 		>
-			<path fill="none" d="M0 0h24v24H0z"></path>
-			<path d="M11 8v5l4.25 2.52.77-1.28-3.52-2.09V8H11zm10 2V3l-2.64 2.64A8.937 8.937 0 0 0 12 3a9 9 0 1 0 9 9h-2c0 3.86-3.14 7-7 7s-7-3.14-7-7 3.14-7 7-7c1.93 0 3.68.79 4.95 2.05L14 10h7z"></path>
+			<path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z"></path>
+			<path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z"></path>
 		</svg>
 	);
 }
