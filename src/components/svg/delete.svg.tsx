@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Delete() {
+export default function Delete(props: React.SVGProps<SVGSVGElement>) {
 	return (
 		<svg
-			className="w-5 h-5"
+			{...props}
 			stroke="currentColor"
 			fill="currentColor"
 			strokeWidth="0"

@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Update() {
+export default function Update(props: React.SVGProps<SVGSVGElement>) {
 	return (
 		<svg
-			className="w-5 h-5"
+			{...props}
 			stroke="currentColor"
 			fill="currentColor"
 			strokeWidth="0"
